@@ -4,6 +4,8 @@
 
 An end-to-end analysis of **15,332 Toronto Airbnb listings**, moving from raw data and feature engineering to statistical modelling, business recommendations, and an interactive pricing estimator.
 
+**[▶ Open the Live Pricing App](https://toronto-airbnb-pricing-analytics-jthhn2unchpj3ewyfbnyfq.streamlit.app/)**
+
 > **Project note:** This repository is my independently rebuilt and extended portfolio version of a graduate analytics team project that I led. I redesigned the workflow into a reproducible pipeline, reproduced the modelling process, and expanded the work into a business-facing analytics product.
 
 ## Business question
@@ -68,6 +70,8 @@ The results suggest a simple three-layer way to think about pricing:
 3. **Fine-tune with operational features.** Instant booking and amenities offer smaller, more actionable adjustments.
 
 ## Interactive app
+
+**[Launch the live Streamlit app](https://toronto-airbnb-pricing-analytics-jthhn2unchpj3ewyfbnyfq.streamlit.app/)**
 
 The Streamlit app turns the final model into a simple scenario tool. A user can change property characteristics and see the model-implied nightly price.
 
