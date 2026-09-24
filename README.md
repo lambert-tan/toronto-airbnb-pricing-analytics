@@ -77,13 +77,13 @@ This project has three complementary layers:
 
 | Layer | Purpose |
 |---|---|
-| **Tableau / Power BI** | Explore the Toronto market, property mix, location, and pricing patterns |
+| **Tableau** | Explore the Toronto market, property mix, location, and pricing patterns |
 | **Python / statistical model** | Estimate conditional associations with nightly price |
 | **Streamlit** | Explore a user-defined pricing scenario |
 
-The Tableau and Power BI dashboards use the same analytical dataset and are designed around two views: **Toronto Market Overview** and **Pricing Drivers**. Their design specifications, calculated fields, and DAX measures are documented in [dashboard/README.md](dashboard/README.md).
+The Tableau dashboard is designed around two views: **Toronto Market Overview** and **Pricing Drivers**. The dashboard specification and calculated fields are documented in [dashboard/README.md](dashboard/README.md).
 
-> Tableau Public and Power BI links will be added after the interactive reports are published. I do not include placeholder public links.
+> A Tableau Public link and dashboard screenshots will be added after the interactive report is published. I do not include a placeholder public link.
 
 ## Interactive pricing scenario
 
