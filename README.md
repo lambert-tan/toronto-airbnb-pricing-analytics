@@ -71,6 +71,20 @@ Amenities and instant booking appear to be smaller pricing signals. They may sti
 
 The results also suggest separating **reputation** from **price formation**. Superhost status may matter for trust, conversion, or occupancy even though it did not remain a meaningful nightly-price predictor in this specification. Those outcomes are outside the scope of the current dataset.
 
+## Explore the analysis
+
+This project has three complementary layers:
+
+| Layer | Purpose |
+|---|---|
+| **Tableau / Power BI** | Explore the Toronto market, property mix, location, and pricing patterns |
+| **Python / statistical model** | Estimate conditional associations with nightly price |
+| **Streamlit** | Explore a user-defined pricing scenario |
+
+The Tableau and Power BI dashboards use the same analytical dataset and are designed around two views: **Toronto Market Overview** and **Pricing Drivers**. Their design specifications, calculated fields, and DAX measures are documented in [dashboard/README.md](dashboard/README.md).
+
+> Tableau Public and Power BI links will be added after the interactive reports are published. I do not include placeholder public links.
+
 ## Interactive pricing scenario
 
 **[Launch the Streamlit app](https://toronto-airbnb-pricing-analytics-jthhn2unchpj3ewyfbnyfq.streamlit.app/)**
@@ -92,6 +106,8 @@ streamlit run app.py
 .
 ├── app.py
 ├── data/
+│   └── README.md
+├── dashboard/
 │   └── README.md
 ├── notebooks/
 │   └── airbnb_pricing_analysis.ipynb
