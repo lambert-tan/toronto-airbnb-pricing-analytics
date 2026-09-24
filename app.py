@@ -101,7 +101,8 @@ if submitted:
         "instant_bookable": int(instant),
     }
     estimate = estimate_price(features)
-    st.success(f"Model-implied nightly price: **{estimate:,.0f} CAD**")\n    st.caption("The model is estimated in log dollars. This value is obtained by exponentiating the fitted log price and does not include a retransformation correction for the conditional mean.")
+    st.success(f"Model-implied nightly price: **{estimate:,.0f} CAD**")
+    st.caption("The model is estimated in log dollars. This value is obtained by exponentiating the fitted log price and does not include a retransformation correction for the conditional mean.")
 
 st.divider()
 st.subheader("Model diagnostics")
