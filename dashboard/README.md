@@ -1,11 +1,11 @@
 # BI Dashboards
 
-This folder is reserved for the business-intelligence layer of the Toronto Airbnb Pricing Analytics project.
+This folder contains the design specification for the Tableau layer of the Toronto Airbnb Pricing Analytics project.
 
 The statistical model and the dashboards answer different questions:
 
 - **Python / OLS:** Which listing characteristics are associated with nightly price after controlling for other included characteristics?
-- **Tableau / Power BI:** What does the Toronto Airbnb market look like across listing types, price ranges, and distance from downtown?
+- **Tableau:** What does the Toronto Airbnb market look like across listing types, price ranges, and distance from downtown?
 - **Streamlit:** What model-implied nightly price is produced for a user-defined listing scenario?
 
 ## Dashboard 1 — Toronto Market Overview
@@ -80,50 +80,15 @@ END
 
 Once published to Tableau Public, add the public dashboard URL to the main project README.
 
-## Power BI implementation
+## Publishing
 
-Recommended report pages:
+The finished portfolio version should include:
 
-```text
-1. Market Overview
-2. Location & Property Mix
-3. Pricing Drivers
-4. Model Notes
-```
+- a Tableau Public link to the interactive dashboard;
+- screenshots of the Market Overview and Pricing Drivers views; and
+- the Tableau workbook (`.twbx`) when it is suitable for public sharing.
 
-Useful measures include:
-
-```DAX
-Listings =
-COUNTROWS('Airbnb')
-
-Median Nightly Price =
-MEDIAN('Airbnb'[price])
-
-Median Distance Downtown =
-MEDIAN('Airbnb'[distance_to_downtown_km])
-
-Entire Home Share =
-DIVIDE(
-    CALCULATE(COUNTROWS('Airbnb'), 'Airbnb'[is_entire_home] = 1),
-    COUNTROWS('Airbnb')
-)
-```
-
-A distance-band calculated column can be created as:
-
-```DAX
-Distance Band =
-SWITCH(
-    TRUE(),
-    'Airbnb'[distance_to_downtown_km] < 2, "0–2 km",
-    'Airbnb'[distance_to_downtown_km] < 5, "2–5 km",
-    'Airbnb'[distance_to_downtown_km] < 10, "5–10 km",
-    "10+ km"
-)
-```
-
-When the Power BI report is complete, export several screenshots for this folder and, if appropriate, include the `.pbix` workbook. A public Power BI link should only be added if the report is intentionally published for public access.
+The screenshots are important because they allow someone reviewing the GitHub repository to understand the dashboard without opening Tableau.
 
 ## Data fields
 
