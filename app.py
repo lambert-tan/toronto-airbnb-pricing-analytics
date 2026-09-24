@@ -70,8 +70,8 @@ Room type, bathroom setup and size create the largest differences in nightly pri
 """)
 
 st.divider()
-st.subheader("Try the pricing estimator")
-st.caption("The estimate comes from the final log-price OLS specification. It is a scenario tool, not a production pricing recommendation.")
+st.subheader("Explore a pricing scenario")
+st.caption("This applies the final log-price OLS coefficients to the selected listing characteristics. The result is a model-implied scenario, not an expected market-price forecast.")
 
 with st.form("pricing_form"):
     a, b, c, d = st.columns(4)
@@ -87,7 +87,7 @@ with st.form("pricing_form"):
     with d:
         shared_bath = st.toggle("Shared bathroom", value=False)
         instant = st.toggle("Instant booking", value=True)
-    submitted = st.form_submit_button("Estimate nightly price", type="primary", use_container_width=True)
+    submitted = st.form_submit_button("Calculate model-implied price", type="primary", use_container_width=True)
 
 if submitted:
     features = {
@@ -101,7 +101,7 @@ if submitted:
         "instant_bookable": int(instant),
     }
     estimate = estimate_price(features)
-    st.success(f"Estimated nightly price: **{estimate:,.0f} CAD**")
+    st.success(f"Model-implied nightly price: **{estimate:,.0f} CAD**")\n    st.caption("The model is estimated in log dollars. This value is obtained by exponentiating the fitted log price and does not include a retransformation correction for the conditional mean.")
 
 st.divider()
 st.subheader("Model diagnostics")
@@ -120,4 +120,4 @@ with st.expander("Final model coefficients"):
     st.dataframe(table.round(4), use_container_width=True)
 
 st.divider()
-st.caption("Built by Lambert Tan · Independently rebuilt and extended from a graduate analytics team project that I led.")
+st.caption("Lambert Tan · Portfolio reconstruction and extension of a graduate analytics team project that I led.")
