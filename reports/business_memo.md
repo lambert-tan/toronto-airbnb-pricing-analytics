@@ -1,28 +1,33 @@
-# Business Memo: Key Drivers of Airbnb Pricing in Toronto
+# Business Memo: What Drives Airbnb Nightly Prices in Toronto?
 
 **To:** Toronto Airbnb Hosts and Property Managers  
 **From:** Lambert Tan  
-**Subject:** Key Drivers of Airbnb Pricing in Toronto
+**Subject:** Pricing evidence from 15,332 Toronto listings
 
 ## Executive summary
 
-Using 15,332 Toronto listings from the November 2025 Inside Airbnb snapshot, the final log-price regression explains about 61.8% of price variation. The main finding is that listing setup and property fundamentals matter more than downtown proximity alone. Entire-home status, bathroom setup and listing size create the largest pricing differences, while location acts as a secondary adjustment. Superhost status and host experience did not remain meaningful price drivers after controlling for listing characteristics.
+I analyzed 15,332 Toronto listings from the November 2025 Inside Airbnb snapshot to examine which observable listing characteristics are most closely associated with nightly price. The final log-price model explains about 61.8% of variation in the test sample.
 
-## Key findings
+The strongest pattern is not simply “downtown costs more.” Property format matters first. Entire homes are associated with substantially higher nightly prices than private rooms, while a shared bathroom is associated with a sizeable discount. Distance from downtown still matters after these characteristics are controlled for, but the estimated effect is smaller and gradual.
 
-- **Entire home:** approximately 43.8% estimated premium relative to private rooms, holding other included factors constant.
-- **Shared bathroom:** approximately 21.0% estimated price penalty.
-- **Distance to downtown:** approximately 2.7% lower price per additional kilometre.
-- **Instant booking:** approximately 2.4% estimated premium.
-- **Amenities:** approximately 0.4% estimated increase per additional amenity.
+For hosts, this means that a useful pricing comparison should start with structurally similar listings. Neighbourhood averages alone can mix together properties that are not genuinely comparable.
 
-## Recommendations
+## Findings
 
-1. Benchmark against comparable listings by room type, bathroom setup and size before using neighbourhood averages.
-2. Use downtown distance to refine a property-based benchmark rather than letting location define the rate.
-3. Treat instant booking and amenities as smaller, actionable pricing levers.
-4. Treat Superhost status primarily as a trust and conversion signal rather than a direct justification for a higher nightly rate.
+An entire home is associated with an estimated **43.8% higher nightly price** than a private room, holding the other included variables constant. A shared bathroom is associated with an estimated **21.0% lower price**.
 
-## Limitations
+Location remains relevant. Each additional kilometre from the downtown reference point is associated with approximately a **2.7% decrease** in nightly price. This is meaningful across larger distances, but it does not outweigh major differences in property format.
 
-The analysis is observational and cross-sectional, so the estimates should not be interpreted as causal. It does not directly capture seasonality, occupancy, booking conversion, guest preferences or current competitor inventory. Size variables are correlated and should be interpreted as a group rather than as isolated causal effects.
+The smaller operational variables have more modest relationships with price. Instant booking is associated with roughly a **2.4% premium**, while each additional amenity is associated with about **0.4%**. Superhost status and host experience were considered during model development but did not remain in the final specification after the other listing characteristics were taken into account.
+
+## Pricing implications
+
+I would use the results in two stages. First, establish a benchmark from listings with a similar room type, bathroom arrangement, capacity, and number of bedrooms and bathrooms. Second, adjust that benchmark for location and smaller operational differences such as instant booking and amenity count.
+
+This also changes how I would interpret Superhost status. The analysis does not provide evidence for using the badge itself as a direct nightly-rate premium. It may still affect guest trust, booking conversion, or occupancy, but those outcomes are not measured here.
+
+## Limits of the analysis
+
+The estimates describe conditional associations in one cross-sectional snapshot; they are not causal effects. The data do not directly capture seasonality, occupancy, booking conversion, guest preferences, event demand, or current competitor inventory. Several size variables are also correlated, so their coefficients are best interpreted together rather than as isolated effects.
+
+The next extension I would prioritize is repeated listing data combined with a demand or occupancy measure. That would allow the analysis to move beyond explaining cross-sectional price differences and toward a more realistic dynamic pricing problem.
