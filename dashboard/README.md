@@ -1,244 +1,99 @@
-# BI Dashboards
+# Tableau Dashboard
 
-This folder contains the design specification for the Tableau layer of the Toronto Airbnb Pricing Analytics project.
+**[View the interactive Tableau Public dashboard](https://public.tableau.com/views/Toronto_Airbnb_Pricing_Analytics/Dashboard01MarketPulse)**
 
-The statistical model and the dashboards answer different questions:
+This folder documents the Tableau layer of the Toronto Airbnb Pricing Analytics project. The published workbook contains two connected dashboards built from the same 15,332-listing analytical sample.
 
-- **Python / OLS:** Which listing characteristics are associated with nightly price after controlling for other included characteristics?
-- **Tableau:** What does the Toronto Airbnb market look like across listing types, price ranges, and distance from downtown?
-- **Streamlit:** What model-implied nightly price is produced for a user-defined listing scenario?
+- **Market Pulse** — descriptive market view of listing concentration, room type, nightly rate, and distance from downtown.
+- **What Drives Nightly Price?** — conditional associations from the final log-price OLS model.
 
-## Dashboard 1 — Toronto Market Overview
+The two dashboards are connected with in-dashboard navigation.
 
-The first dashboard should help a user explore the market before looking at the regression model.
+## How the layers differ
 
-### KPI cards
-- Listings in current filter
-- Median nightly price
-- Median distance to downtown
-- Share of entire-home listings
+- **Tableau / Market Pulse:** descriptive patterns in the November 2025 Toronto market.
+- **Python / OLS:** conditional associations with nightly price after controlling for the other included model variables.
+- **Streamlit:** model-implied pricing scenarios for user-selected listing characteristics.
 
-### Recommended views
-1. **Toronto listing map** — latitude/longitude, coloured by nightly price or room type.
-2. **Median price by room type** — compare entire homes and private rooms.
-3. **Price by distance band** — 0–2 km, 2–5 km, 5–10 km, and 10+ km from the downtown reference point.
-4. **Price by capacity / bedrooms** — show how price changes with listing size.
+Descriptive differences should not be interpreted as regression effects, and regression estimates are associations rather than causal effects.
+
+## Dashboard 1 — Market Pulse
+
+The market dashboard summarizes **15,332 Toronto Airbnb listings** from November 2025.
+
+### KPIs
+
+| KPI | Value |
+|---|---:|
+| Active listings | 15,332 |
+| Median nightly rate | $125 |
+| Median distance to downtown | 5.3 km |
+| Entire-home share | 66.8% |
+
+### Views
+
+**Toronto listing map**  
+Each point represents one listing. Colour distinguishes entire homes/apartments from private rooms. Tooltips provide neighbourhood, room type, nightly price, bedrooms, bathrooms, downtown distance, host status, and booking setting.
+
+**Price by property type**  
+Median nightly rate is **$167 for entire homes/apartments** and **$65 for private rooms**.
+
+**Price by distance**  
+Median nightly rates decline across the descriptive distance bands:
+
+| Distance from downtown | Median nightly rate |
+|---|---:|
+| 0–2 km | $183 |
+| 2–5 km | $140 |
+| 5–10 km | $115 |
+| 10+ km | $81 |
+
+These are raw market summaries, not the model's estimated distance coefficient.
 
 ### Filters
-- Room type
-- Price range
-- Bedrooms
-- Bathrooms
-- Superhost
-- Instant bookable
-- Distance band
 
-## Dashboard 2 — Pricing Drivers
+The published dashboard supports filtering by room type, bedrooms, distance band, host status, and booking setting.
 
-This dashboard connects descriptive market patterns with the final regression results.
+## Dashboard 2 — What Drives Nightly Price?
 
-### Model results
-| Driver | Estimated association |
+The second dashboard presents selected business-facing coefficients from the final multivariate log-price OLS model.
+
+| Driver | Estimated price difference |
 |---|---:|
 | Entire home vs. private room | +43.8% |
-| Shared bathroom | -21.0% |
-| Distance from downtown | -2.7% per km |
 | Instant booking | +2.4% |
 | Each additional amenity | +0.4% |
+| Distance from downtown | -2.7% per km |
+| Shared bathroom | -21.0% |
 
-### Recommended views
-1. **Coefficient impact chart** — horizontal bars for the five interpretable effects above.
-2. **Price vs. distance** — scatter plot or binned view showing the raw relationship between nightly price and downtown distance.
-3. **Room type × bathroom arrangement** — compare median prices across structurally different listings.
-4. **Model context panel** — 15,332 listings; test R² ≈ 0.618; log-price OLS; HC3 robust inference.
+The model uses **15,332 listings** and achieves **test R² = 0.619** (0.6185 unrounded). HC3 robust standard errors are used for inference.
 
-The dashboard should clearly distinguish **descriptive charts** from **regression estimates**. Raw differences in a chart are not the same as conditional model effects.
+Property characteristics show the largest estimated price differences. Entire-home listings are associated with a 43.8% premium relative to private rooms, while shared bathrooms are associated with a 21.0% discount. Each additional kilometre from downtown is associated with a 2.7% decrease in nightly price, holding the other modeled characteristics constant.
 
-## Tableau implementation
+## Tableau data
 
-Recommended workbook structure:
+The market dashboard uses a cleaned 19-field Tableau dataset with listing-level geography and selected analytical fields:
 
-```text
-Toronto Airbnb Pricing.twbx
-├── Market Overview
-├── Pricing Drivers
-├── Map
-├── Room Type Comparison
-├── Distance Analysis
-└── Model Effects
-```
+`price`, `latitude`, `longitude`, `neighbourhood`, `room_type`, `accommodates`, `bedrooms`, `bathrooms`, `shared_bathroom`, `entire_home`, `distance_to_downtown_km`, `amenity_count`, `instant_bookable`, `superhost`, `host_experience_years`, `distance_band`, `bathroom_type`, `booking_setting`, and `host_status`.
 
-Suggested calculated field for distance band:
+The processed listing-level CSV is excluded from GitHub through `.gitignore`. The regression-facing values are reproducible from the Python modeling workflow and the files under `outputs/model_results/`.
 
-```text
-IF [Distance To Downtown Km] < 2 THEN "0–2 km"
-ELSEIF [Distance To Downtown Km] < 5 THEN "2–5 km"
-ELSEIF [Distance To Downtown Km] < 10 THEN "5–10 km"
-ELSE "10+ km"
-END
-```
+## Model-effects export
 
-Once published to Tableau Public, add the public dashboard URL to the main project README.
+The Tableau model-effects view uses five selected coefficients from the fitted model. The export helper is implemented in `src/modeling.py`, and the notebook calls it after fitting the final model.
 
-## Publishing
+The complete fitted coefficient table remains available in:
 
-The finished portfolio version should include:
+`outputs/model_results/final_coefficients.csv`
 
-- a Tableau Public link to the interactive dashboard;
-- screenshots of the Market Overview and Pricing Drivers views; and
-- the Tableau workbook (`.twbx`) when it is suitable for public sharing.
+Model performance and diagnostic statistics are stored in:
 
-The screenshots are important because they allow someone reviewing the GitHub repository to understand the dashboard without opening Tableau.
+`outputs/model_results/model_metrics.json`
 
-## Data fields
+## Interpretation
 
-The dashboard layer should use the cleaned / engineered project data rather than the raw 79-column source file. At minimum, retain fields needed for:
+The Tableau workbook is intended as a portfolio-facing analytical product rather than a causal pricing tool. The first dashboard shows what is observed in the market; the second shows conditional model estimates. Keeping those two views separate avoids treating descriptive price gaps as if they were regression results.
 
-- price
-- latitude / longitude
-- room type
-- accommodates
-- bedrooms
-- bathrooms
-- shared bathroom
-- entire home
-- distance to downtown
-- amenity count
-- instant bookable
-- Superhost
+## Source
 
-Do not publish host-identifying fields that are unnecessary for the analysis.
-
-
-## Build guide in Tableau
-
-Use `toronto_airbnb_tableau.csv` as the dashboard source.
-
-### Worksheet 1 — KPI: Listings
-- Marks: Text
-- Drag **Number of Records** to Text.
-- Format as a whole number.
-- Title: `LISTINGS`.
-
-### Worksheet 2 — KPI: Median Price
-- Drag **price** to Text.
-- Change aggregation to **Median**.
-- Format as currency with 0 decimals.
-- Title: `MEDIAN NIGHTLY PRICE`.
-
-### Worksheet 3 — KPI: Median Distance
-- Drag **distance_to_downtown_km** to Text.
-- Change aggregation to **Median**.
-- Format to 1 decimal.
-- Title: `MEDIAN DISTANCE DOWNTOWN`.
-
-### Worksheet 4 — KPI: Entire Home Share
-Create:
-
-```text
-AVG([entire_home])
-```
-
-Format as Percentage and place on Text.
-
-### Worksheet 5 — Toronto Listing Map
-- Columns: **longitude**
-- Rows: **latitude**
-- Marks: Circle
-- Detail: **neighbourhood**
-- Color: **price** or **room_type**
-- Tooltip: neighbourhood, room type, price, bedrooms, bathrooms, distance.
-- Keep marks small enough to show density rather than individual labels.
-
-### Worksheet 6 — Median Price by Room Type
-- Rows: **room_type**
-- Columns: **MEDIAN(price)**
-- Marks: Bar
-- Sort descending.
-- Show value labels.
-
-### Worksheet 7 — Price by Distance Band
-- Columns: **distance_band**
-- Rows: **MEDIAN(price)**
-- Marks: Bar
-- Keep the logical order: 0–2 km, 2–5 km, 5–10 km, 10+ km.
-
-### Worksheet 8 — Price vs. Distance
-- Columns: **distance_to_downtown_km**
-- Rows: **price**
-- Marks: Circle
-- Add transparency to reduce overplotting.
-- Add a trend line if useful.
-- This is a descriptive view; do not label its slope as the regression effect.
-
-### Worksheet 9 — Property / Bathroom Comparison
-- Rows: **room_type**
-- Columns: **bathroom_type**
-- Color or Text: **MEDIAN(price)**
-- Marks: Square.
-- Use this to show how property format and bathroom arrangement interact descriptively.
-
-### Worksheet 10 — Model Effects
-For the five final business-facing effects, use a small manually entered table or the model-results CSV already in this repository:
-
-| Driver | Percent effect |
-|---|---:|
-| Entire home | 43.8 |
-| Shared bathroom | -21.0 |
-| Distance per km | -2.7 |
-| Instant booking | 2.4 |
-| Amenity count | 0.4 |
-
-Use a horizontal bar chart with a zero reference line. Label the view `Conditional model estimates` so it is not confused with the descriptive charts.
-
-## Dashboard layout
-
-### Dashboard A — Toronto Market Overview
-
-Recommended size: **1200 × 800**.
-
-```text
-┌────────────────────────────────────────────────────────────┐
-│ Toronto Airbnb Market Overview                             │
-│ 15,332 listings · November 2025                            │
-├────────────┬────────────┬────────────┬─────────────────────┤
-│ Listings   │ Median $   │ Distance   │ Entire Home %       │
-├──────────────────────────────┬─────────────────────────────┤
-│                              │ Median Price by Room Type   │
-│       Toronto Map            ├─────────────────────────────┤
-│                              │ Price by Distance Band      │
-│                              │                             │
-├──────────────────────────────┴─────────────────────────────┤
-│ Filters: Room Type · Bedrooms · Superhost · Instant Book  │
-└────────────────────────────────────────────────────────────┘
-```
-
-### Dashboard B — What Drives Price?
-
-```text
-┌────────────────────────────────────────────────────────────┐
-│ What Drives Nightly Price?                                 │
-│ Log-price OLS · HC3 robust inference · Test R² ≈ 0.618     │
-├──────────────────────────────┬─────────────────────────────┤
-│                              │ Model Effects               │
-│ Price vs. Downtown Distance  │ Entire home       +43.8%    │
-│                              │ Shared bathroom   -21.0%    │
-│                              │ Distance/km        -2.7%    │
-├──────────────────────────────┼─────────────────────────────┤
-│ Property × Bathroom          │ Interpretation note         │
-│ Comparison                   │ Associations, not causal    │
-└──────────────────────────────┴─────────────────────────────┘
-```
-
-## Portfolio presentation
-
-Keep the visual design restrained. The dashboard should look like an analytical product rather than a class assignment:
-
-- use one accent colour plus neutral tones;
-- avoid decorative chart types;
-- keep titles written as questions or findings;
-- use median rather than mean for descriptive nightly-price KPIs because the price distribution is right-skewed;
-- keep filters consistent across both dashboards;
-- use short tooltips with units and plain-language field names.
-
-After publishing, export one PNG screenshot of each dashboard and save them under `dashboard/screenshots/`. Then add the Tableau Public URL and screenshots to the main README.
+Inside Airbnb · Toronto detailed listings · November 2025
