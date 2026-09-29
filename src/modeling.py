@@ -65,3 +65,38 @@ def estimate_nightly_price(model, **features):
         model.predict(sm.add_constant(row, has_constant="add")).iloc[0]
     )
     return float(np.exp(log_pred))
+
+
+DASHBOARD_EFFECTS = {
+    "is_entire_home": "Entire home",
+    "is_shared_bath": "Shared bathroom",
+    "distance_to_downtown_km": "Distance from downtown (per km)",
+    "instant_bookable": "Instant booking",
+    "amenity_count": "Amenity count",
+}
+
+def export_dashboard_effects(model, robust, output_path="outputs/model_results/model_effects.csv"):
+    """Export selected fitted effects for the Tableau pricing-drivers dashboard.
+
+    Values come directly from the fitted log-price OLS model. The percentage
+    transformation is exact for a one-unit change: 100 * (exp(beta) - 1).
+    HC3 robust p-values are included so the dashboard export remains tied to
+    the model's inference output rather than a manually maintained table.
+    """
+    table = coefficient_table(model, robust).loc[list(DASHBOARD_EFFECTS)].copy()
+    table = table.rename_axis("variable").reset_index()
+    table["driver"] = table["variable"].map(DASHBOARD_EFFECTS)
+    table["effect"] = table["percent_impact"] / 100
+    table["display_effect"] = table["percent_impact"].map(
+        lambda x: f"{x:+.1f}%"
+    )
+    table = table[
+        ["driver", "variable", "effect", "percent_impact",
+         "display_effect", "coefficient", "robust_pvalue"]
+    ].sort_values("effect", ascending=False)
+
+    from pathlib import Path
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    table.to_csv(output_path, index=False)
+    return table
