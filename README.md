@@ -1,10 +1,22 @@
 # Toronto Airbnb Pricing Analytics
 
-### What actually drives Airbnb prices in Toronto?
+**Python · Tableau · Statsmodels · Streamlit**
 
-I analyzed **15,332 Toronto Airbnb listings** to examine how property characteristics, location, and booking features are associated with nightly prices. The analysis combines data cleaning, feature engineering, an interpretable log-price regression, model diagnostics, and a small Streamlit application for exploring pricing scenarios.
+An end-to-end pricing analysis of **15,332 Toronto Airbnb listings**, combining market exploration, feature engineering, interpretable regression, model diagnostics, and interactive visualization.
 
 **[View Tableau Dashboard](https://public.tableau.com/views/Toronto_Airbnb_Pricing_Analytics/Dashboard01MarketPulse)** · **[Open Pricing App](https://toronto-airbnb-pricing-analytics-jthhn2unchpj3ewyfbnyfq.streamlit.app/)**
+
+### Key findings
+
+| Finding | Estimated association |
+|---|---:|
+| Entire home vs. private room | **+43.8%** |
+| Shared bathroom | **−21.0%** |
+| Distance from downtown | **−2.7% per km** |
+| Instant booking | **+2.4%** |
+| Additional amenity | **+0.4%** |
+
+**Model:** log-price OLS · HC3 robust inference · **Test R² = 0.619**
 
 > **Project note:** This repository is my independently rebuilt and extended portfolio version of a graduate analytics team project that I led. I rewrote the analysis as a reproducible Python workflow, reproduced the statistical model, and developed the interactive application presented here.
 
