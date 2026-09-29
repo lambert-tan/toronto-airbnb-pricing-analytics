@@ -4,7 +4,7 @@
 
 I analyzed **15,332 Toronto Airbnb listings** to examine how property characteristics, location, and booking features are associated with nightly prices. The analysis combines data cleaning, feature engineering, an interpretable log-price regression, model diagnostics, and a small Streamlit application for exploring pricing scenarios.
 
-**[▶ Open the Live Pricing App](https://toronto-airbnb-pricing-analytics-jthhn2unchpj3ewyfbnyfq.streamlit.app/)**
+**[View Tableau Dashboard](https://public.tableau.com/views/Toronto_Airbnb_Pricing_Analytics/Dashboard01MarketPulse)** · **[Open Pricing App](https://toronto-airbnb-pricing-analytics-jthhn2unchpj3ewyfbnyfq.streamlit.app/)**
 
 > **Project note:** This repository is my independently rebuilt and extended portfolio version of a graduate analytics team project that I led. I rewrote the analysis as a reproducible Python workflow, reproduced the statistical model, and developed the interactive application presented here.
 
@@ -81,9 +81,11 @@ This project has three complementary layers:
 | **Python / statistical model** | Estimate conditional associations with nightly price |
 | **Streamlit** | Explore a user-defined pricing scenario |
 
-The Tableau dashboard is designed around two views: **Toronto Market Overview** and **Pricing Drivers**. The dashboard specification and calculated fields are documented in [dashboard/README.md](dashboard/README.md).
+The Tableau workbook contains two connected views: **Market Pulse**, which provides an interactive overview of listing concentration, property type, distance from downtown, and nightly rates; and **What Drives Nightly Price?**, which presents the conditional price differences estimated by the multivariate model.
 
-> A Tableau Public link and dashboard screenshots will be added after the interactive report is published. I do not include a placeholder public link.
+**[View the interactive Tableau dashboard](https://public.tableau.com/views/Toronto_Airbnb_Pricing_Analytics/Dashboard01MarketPulse)**
+
+The dashboard specification and calculated fields are documented in [dashboard/README.md](dashboard/README.md).
 
 ## Interactive pricing scenario
 
