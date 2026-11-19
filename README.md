@@ -1,6 +1,6 @@
 # Toronto Airbnb Pricing Analytics
 
-**Python · Tableau · Statsmodels · Streamlit**
+**Python · SQL (DuckDB) · Tableau · Statsmodels · Streamlit**
 
 An end-to-end pricing analysis of **15,332 Toronto Airbnb listings**, combining market exploration, feature engineering, interpretable regression, model diagnostics, and interactive visualization.
 
@@ -114,6 +114,28 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+## SQL layer (DuckDB)
+
+The cleaning and feature steps are also written in SQL, so the sample can be rebuilt, audited and queried without the notebook. DuckDB runs the files locally on the same raw CSV.
+
+| File | What it does |
+|---|---|
+| [`sql/01_clean_and_engineer.sql`](sql/01_clean_and_engineer.sql) | Applies the same cleaning rules as `src/data_cleaning.py` (price parsing and the $15–$900 range, bathroom-text parsing, inactive-listing and room-type filters) and builds the model features from `src/feature_engineering.py` (amenity count, host experience, Haversine distance to Union Station, binary flags). Also returns a **cleaning funnel** showing how many listings each rule removes. |
+| [`sql/02_quality_checks.sql`](sql/02_quality_checks.sql) | 11 checks on the cleaned data (ranges, valid categories, no missing model inputs, plausible coordinates) and, optionally, the sample sizes above. The run fails if any check fails. |
+| [`sql/03_market_exploration.sql`](sql/03_market_exploration.sql) | Unadjusted market cuts with window functions and medians: impact of the price range, price by room type and size, neighbourhood ranking, distance bands, shared-bathroom gap, amenity quartiles, Superhost and instant-booking status. |
+
+```bash
+pip install -r requirements.txt
+python scripts/run_sql_pipeline.py --check-known-totals   # needs data/raw/toronto_listings_detail_nov.csv
+pytest tests/ -q                                           # SQL-vs-Python parity tests
+```
+
+Result tables are written to `outputs/sql_results/`.
+
+**How it was checked.** The raw file is not in the repo, so `tests/test_sql_pipeline.py` generates a synthetic snapshot with awkward values (formatted and unparseable prices, boundary prices, half-bath and shared-bath text, malformed dates, missing flags, amenity lists with quotes and commas) and requires the SQL tables to match `clean_listings()` and `engineer_features()` value by value. `--check-known-totals` asserts 21,468 raw rows and 15,332 final listings on the real file.
+
+**Scope.** The regression, diagnostics and holdout evaluation stay in Python (`src/modeling.py`). The SQL cuts in step 03 are raw medians, not adjusted estimates, so they will differ from the regression coefficients above. One small difference: amenities are counted with `json_array_length`, which expects the JSON format used by Inside Airbnb; Python's `ast.literal_eval` also accepts single-quoted lists.
+
 ## Repository structure
 
 ```text
@@ -129,11 +151,19 @@ streamlit run app.py
 │   └── model_results/
 ├── reports/
 │   └── business_memo.md
+├── scripts/
+│   └── run_sql_pipeline.py
+├── sql/
+│   ├── 01_clean_and_engineer.sql
+│   ├── 02_quality_checks.sql
+│   └── 03_market_exploration.sql
 ├── src/
 │   ├── data_cleaning.py
 │   ├── feature_engineering.py
 │   ├── modeling.py
 │   └── visualization.py
+├── tests/
+│   └── test_sql_pipeline.py
 ├── requirements.txt
 └── README.md
 ```
