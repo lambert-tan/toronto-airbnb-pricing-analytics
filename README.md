@@ -1,8 +1,8 @@
 # Toronto Airbnb Pricing Analytics
 
-Entire homes in the November 2025 Toronto sample listed for a median of **CAD 167 per night**, compared with **CAD 65** for private rooms. The groups also differ in size, location and amenities. How much of the price gap remains when comparing similar listings?
+Entire homes in the November 2025 Toronto sample listed for a median of **CAD 167 per night**, compared with **CAD 65** for private rooms. The groups also differ in size, location and amenities. For a host pricing a two-bedroom apartment, the practical question is which nearby listings make credible comparisons.
 
-**[View Tableau Dashboard](https://public.tableau.com/views/Toronto_Airbnb_Pricing_Analytics/Dashboard01MarketPulse)**
+I led the original graduate team project and rebuilt the Python analysis and interactive application for this portfolio. [Market dashboard](https://public.tableau.com/views/Toronto_Airbnb_Pricing_Analytics/Dashboard01MarketPulse) · [Pricing app](https://toronto-airbnb-pricing-analytics-jthhn2unchpj3ewyfbnyfq.streamlit.app/)
 
 ## Sample and method
 
@@ -20,7 +20,7 @@ The model uses a 70/30 train/test split. Test R² was **0.619** for log price, c
 | Instant booking enabled | +2.4% |
 | One additional listed amenity | +0.4% |
 
-For a pricing benchmark, start with nearby listings that have a similar room type, capacity and bathroom arrangement. A neighbourhood median can mix large apartments with single rooms. These estimates describe asking prices in one snapshot. Booking demand, occupancy and the revenue impact of changing a price remain open questions. [Coefficient estimates](outputs/model_results/model_effects.csv) · [Host pricing memo](reports/business_memo.md)
+For a two-bedroom apartment with a private bathroom, I would start with nearby entire homes of similar size. If few qualify, I would widen the search area before adding private rooms. The fitted location gradient gives a way to compare properties farther apart. The 43.8% room-type estimate comes from a log-price regression, so it cannot be subtracted from the raw median gap to assign the remainder to location or size. To recommend a rate that maximizes revenue, I would also need booked nights and realized prices. [Coefficient estimates](outputs/model_results/model_effects.csv) · [Host pricing memo](reports/business_memo.md)
 
 ## SQL layer (DuckDB)
 
@@ -42,4 +42,3 @@ jupyter notebook notebooks/airbnb_pricing_analysis.ipynb
 
 The SQL runner writes tables to `outputs/sql_results/`. Run `pytest tests/ -q` for SQL/Python comparisons on synthetic listings. Run `streamlit run app.py` to explore a listing using the saved coefficients. The app converts fitted log price back to dollars for scenario comparisons.
 
-I led the original graduate team project and independently rebuilt the Python analysis and interactive application for this portfolio.
