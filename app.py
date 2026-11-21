@@ -1,4 +1,5 @@
 """Interactive asking-price scenarios for the Toronto Inside Airbnb snapshot."""
+import json
 import math
 from pathlib import Path
 
@@ -9,7 +10,8 @@ st.set_page_config(page_title="Rate Studio · Toronto", page_icon="◒", layout=
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "outputs" / "model_results"
 COEFFICIENTS = pd.read_csv(RESULTS / "final_coefficients.csv", index_col=0)["coefficient"]
-METRICS = pd.read_json(RESULTS / "model_metrics.json", typ="series")
+METRICS = json.loads((RESULTS / "model_metrics.json").read_text())
+SNAPSHOT = pd.Period(METRICS["snapshot_month"], freq="M").strftime("%B %Y")
 LABELS = {
     "is_entire_home": "Entire home",
     "accommodates": "Guests",
@@ -111,8 +113,8 @@ with right:
     <div class="rs-price">${rate:,.0f} <span class="rs-unit">CAD / night</span></div>
     <p>{room} · {guests} guests · {beds} bedrooms · {distance:g} km from Union Station</p>
     <div class="rs-chart"><div class="rs-kicker">Same listing at different distances</div>{rate_curve(features)}</div></section>""", unsafe_allow_html=True)
-    median = 167 if room == "Entire home" else 65
-    st.caption(f"Market reference · {room} listings had a median asking rate of CAD {median} in November 2025. The median includes properties of different sizes and locations.")
+    median = METRICS["entire_home_median" if room == "Entire home" else "private_room_median"]
+    st.caption(f"Market reference · {room} listings had a median asking rate of CAD {median:,.0f} in {SNAPSHOT}. The median includes properties of different sizes and locations.")
     if not 15 <= rate <= 900:
         st.warning("This estimate falls outside the CAD 15–900 asking-price range used to fit the model.")
 
@@ -141,14 +143,14 @@ else:
 
 def export_row(name, values):
     return {"Scenario": name, **{label: values[k] for k, label in LABELS.items()},
-            "Modelled nightly rate (CAD)": round(estimate_price(values), 2), "Market snapshot": "2025-11"}
+            "Modelled nightly rate (CAD)": round(estimate_price(values), 2), "Market snapshot": METRICS["snapshot_month"]}
 
 rows = [export_row("Baseline", reference)] if reference else []
 rows.append(export_row("Current", features))
 st.download_button("Download scenario CSV", pd.DataFrame(rows).to_csv(index=False), "toronto-pricing-scenarios.csv", "text/csv")
 
 with st.expander("Market data and model diagnostics"):
-    st.write("The model uses 15,332 Toronto listings from the November 2025 Inside Airbnb snapshot. It exponentiates the fitted log asking price. Actual booked rates, occupancy and revenue are outside its scope.")
+    st.write(f"The model uses {METRICS['listings']:,} Toronto listings from the {SNAPSHOT} Inside Airbnb snapshot. It exponentiates the fitted log asking price. Actual booked rates, occupancy and revenue are outside its scope.")
     st.write("The 70/30 train/test split evaluates log-price fit. The regression uses HC3 robust standard errors following a Breusch–Pagan test for unequal residual variance.")
     for col, (label, key) in zip(st.columns(4), [("Train R²","train_r2"),("Test R²","test_r2"),("Test RMSE (log)","test_rmse_log"),("Test MAE (log)","test_mae_log")]):
         col.metric(label, f"{METRICS[key]:.3f}")

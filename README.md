@@ -58,5 +58,5 @@ python scripts/run_sql_pipeline.py --check-known-totals
 jupyter notebook notebooks/airbnb_pricing_analysis.ipynb
 ```
 
-The SQL runner writes tables to `outputs/sql_results/`. Run `pytest tests/ -q` for SQL/Python comparisons on synthetic listings. Run `streamlit run app.py` to explore a listing using the saved coefficients. The app converts fitted log price back to dollars for scenario comparisons.
+Running the notebook through the final export cell refreshes the regression coefficients, fit statistics, sample medians and Tableau effects table together. Rate Studio reads those saved results at startup. The SQL runner writes tables to `outputs/sql_results/`. Run `pytest tests/ -q` for SQL/Python comparisons on synthetic listings. Run `streamlit run app.py` to explore a listing using the saved coefficients. The app converts fitted log price back to dollars for scenario comparisons.
 
