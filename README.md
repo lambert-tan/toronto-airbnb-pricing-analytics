@@ -6,6 +6,8 @@ An end-to-end pricing analysis of **15,332 Toronto Airbnb listings**, combining 
 
 **[View Tableau Dashboard](https://public.tableau.com/views/Toronto_Airbnb_Pricing_Analytics/Dashboard01MarketPulse)** · **[Open Pricing App](https://toronto-airbnb-pricing-analytics-jthhn2unchpj3ewyfbnyfq.streamlit.app/)**
 
+[SQL queries and run instructions](#sql-layer-duckdb)
+
 ### Key findings
 
 | Finding | Estimated association |
